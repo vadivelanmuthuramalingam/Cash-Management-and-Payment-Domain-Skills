@@ -1,0 +1,369 @@
+Pure Java
+0. Pillars of OOP.
+
+	| Pillar        | Description                     | Keyword/Tool           |
+	| ------------- | ------------------------------- | ---------------------- |
+	| Encapsulation | Data hiding + access control    | private, getter/setter |
+	| Abstraction   | Hiding internal details         | abstract, interface    |
+	| Inheritance   | Code reuse from parent to child | extends                |
+	| Polymorphism  | Same method behaves differently | override/overload      |
+
+
+
+
+1. Polymorphism — understand static and dynamic polymorphisms.
+	✅ 1. Static Polymorphism (Compile-time Polymorphism)
+	Also called Method Overloading.
+
+	Definition: Same method name with different signatures (parameter types or counts) within the same class.
+
+
+	✅ 2. Dynamic Polymorphism (Runtime Polymorphism)
+	Also called Method Overriding.
+
+	Definition: When a subclass provides a specific implementation of a method that is already defined in its superclass.
+
+2. Difference between String, StringBuilder, and StringBuffer.
+
+	🔹 1. String
+		✅ Immutable: Once created, the value cannot be changed.
+
+			📍 Stored in the String Pool.
+
+			🧠 Every modification creates a new object.
+
+			Example:
+			String str = "Hello";
+			str = str + " World"; // New object created
+			System.out.println(str); // Output: Hello World
+		🔸 Use When:
+			String data is not going to change frequently.
+
+			You want thread-safety and efficiency is not a big concern.
+
+	🔹 2. StringBuilder
+		✅ Mutable: Content can be changed without creating a new object.
+
+			🚫 Not thread-safe: Not safe for use in multi-threaded environments.
+
+			✅ Faster than StringBuffer because there's no synchronization.
+
+			Example:
+			StringBuilder sb = new StringBuilder("Hello");
+			sb.append(" World");
+			System.out.println(sb); // Output: Hello World
+		🔸 Use When:
+			You need to manipulate strings heavily and efficiently in a single-threaded context.
+
+	🔹 3. StringBuffer
+		✅ Mutable like StringBuilder.
+
+			✅ Thread-safe: All methods are synchronized.
+
+			🚫 Slower than StringBuilder due to synchronization overhead.
+
+			Example:
+			StringBuffer sb = new StringBuffer("Hello");
+			sb.append(" World");
+			System.out.println(sb); // Output: Hello World
+		🔸 Use When:
+			You need to manipulate strings in a multi-threaded context.
+
+	| Feature             | `String`                  | `StringBuilder`              | `StringBuffer`                 |
+	| ------------------- | ------------------------- | ---------------------------- | ------------------------------ |
+	| **Mutable**         | ❌ No                      | ✅ Yes                        | ✅ Yes                          |
+	| **Thread-safe**     | ✅ (Immutable)             | ❌ No                         | ✅ Yes                          |
+	| **Performance**     | 🔴 Slow (if many changes) | ✅ Fast                       | ⚠️ Slower than `StringBuilder` |
+	| **Synchronization** | ❌ No                      | ❌ No                         | ✅ Yes                          |
+	| **Use-case**        | Constant strings          | Single-threaded manipulation | Multi-threaded manipulation    |
+
+
+3. Immutability in Java and how to implement an immutable class.
+
+	Immutability in Java is a powerful design principle, especially useful in concurrent, multi-threaded, or functional programming.
+	
+	✅ What is Immutability?
+	An immutable object is one whose state cannot be changed after it is created.
+
+	✅ Why Use Immutable Objects?
+		✅ Thread-safe: No need for synchronization.
+		✅ Reliable: Cannot be modified unexpectedly.
+		✅ Easy to debug: State doesn’t change during runtime.
+		✅ Good for caching & hash-based collections (e.g., HashMap keys).
+
+4. Collections API.
+	| Interface    | Description                           | Implementations Examples                    |
+	| ------------ | ------------------------------------- | ------------------------------------------- |
+	| `Collection` | Root of all collections               | `List`, `Set`, `Queue`                      |
+	| `List`       | Ordered collection, allows duplicates | `ArrayList`, `LinkedList`, `Vector`         |
+	| `Set`        | Unordered, no duplicates              | `HashSet`, `LinkedHashSet`, `TreeSet`       |
+	| `Queue`      | FIFO structure                        | `LinkedList`, `PriorityQueue`, `ArrayDeque` |
+	| `Deque`      | Double-ended queue                    | `ArrayDeque`, `LinkedList`                  |
+	| `Map`        | Key-value pairs, unique keys          | `HashMap`, `TreeMap`, `LinkedHashMap`       |
+
+
+5. Internal working of a HashMap.
+
+6. Why we override equals() and hashCode() and the implications of not doing that.
+
+7. ConcurrentHashMap: how does it differ from HashMap and how does it work?
+
+8. Concurrent collections vs synchronized collections.
+
+9. ⁠Pessimistic vs Optimistic locking.
+
+10. ⁠Serializable Interface.
+
+11. ⁠Why do we have serialVersionUID and what’s the implication of not having it?
+
+12. transient keyword.
+
+13. Concurrency vs Parallelism.
+
+14. Thread vs Process.
+
+15. Thread Lifecycle.
+
+16. Use of volatile keyword.
+
+17. AtomicInteger.
+
+18. Various ways to make a method thread safe and when should you use which?
+
+19. Functional Interface.
+
+20. ⁠Difference between Abstract class and interface and when to use which.
+
+21. ⁠default method vs static method in Functional interfaces.
+
+22. ⁠Checked vs Unchecked Exceptions.
+
+23. ⁠The throws keyword.
+
+24. ⁠Exception Handling.
+
+25. ⁠Exception Hierarchy.
+
+26. ⁠The this keyword.
+
+27. Covariant vs Contravariant.
+
+28. ⁠Internal implementation of a HashSet.
+
+29. ⁠HashMap vs Hashtable vs WeakHashMap vs TreeMap vs LinkedHashMap.
+
+30. ⁠HashSet vs TreeSet.
+
+31. ⁠Upcasting vs Downcasting.
+
+32. ⁠Autoboxing vs Unboxing.
+
+33. ⁠Callable vs Runnable.
+
+34. Executors vs CompletableFuture vs Future.
+
+35. ⁠Comparator vs Comparable.
+
+36. ⁠finally block.
+
+37. ⁠Java pass by value or by reference, explain.
+
+38. ⁠JDK vs JRE vs JVM.
+
+39. ⁠ArrayList vs Array vs LinkedList vs Vector.
+
+40. ⁠Practice Java Streams problems.
+
+41. ⁠What is deadlock, how do you prevent it?
+
+42. Fail-fast vs fail-safe iterators.
+
+43. sleep() vs wait() vs yield().
+
+44. notify() vs notifyAll().
+
+45. Java Memory Model.
+
+46. Evolution of Java versions from Java 8 to latest.
+
+47. Heap vs Stack memory.
+
+48. Iterator vs ListIterator.
+
+49. Thread creation.
+
+50. What is the difference between == and .equals() in Java?
+
+51. What is a constructor? What types of constructors are there?
+
+52. What are static variables and static blocks?
+
+53. What is method overloading and method overriding?
+
+54. Can a finally block override a return statement?
+
+55. What is the difference between throw and throws?
+
+56. What is the use of the final keyword in Java?
+
+57. Aggregation vs Composition vs Association?
+
+58. How does garbage collection work in Java?
+
+59. What is class loading and how does the ClassLoader work?
+
+60. What is reflection in Java?
+
+61. What are annotations and how are they used?
+
+62. JVM vs JIT.
+
+63. Explain Java String Pool.
+
+64. Explain public static void main(String args[]) in Java.
+
+65. What is the consequence of not declaring the main as static?
+
+66. Explain wrapper classes and why we need them.
+
+67. Instance vs Local variables vs Class variables.
+
+68. Creating String with new keyword vs String literal.
+
+69. Why does the Java array index start with 0?
+
+70. Shallow vs Deep Copy.
+
+71. Explain Jagged array.
+
+72. new vs newInstance().
+
+73. Access modifiers.
+
+74. Synchronized ArrayList vs Vectors.
+
+75. Collection vs Collections vs Collectors.
+
+76. final vs finally vs finalize.
+
+77. Explain try-with-resources and how it improves resource management?
+
+78. What is the use of the Fork/Join framework in Java?
+
+79. Import vs Static Import.
+
+80. Explain constructor overloading and copy constructor.
+
+81. Exception propagation.
+
+82. Daemon threads.
+
+83. finally block vs System.exit().
+
+84. constructor chaining.
+
+85. When to use Array, Arraylist, and Linkedlist?
+
+86. Explain varargs.
+
+87. Error vs Exception.
+
+88. Explain memory leak.
+
+Spring Boot.
+0. WAR vs embedded containers.
+
+1. Explain @ComponentScan.
+
+2. What is dependency injection in Spring and the various types?
+
+3. Explain the IOC container.
+
+4. Explain Spring Data Rest and touch on why it is discouraged in real-world applications.
+
+2. Explain the @SpringBoot annotation.
+
+3. What are the Spring Boot Starter Dependencies?
+
+4. Difference between @Component, @Service, and @Repository?
+
+5. What is the difference between lazy and eager loading in Hibernate?
+
+6. What is a JPA entity?
+
+7. What is Spring Boot and why is it used?
+
+8. How does a spring application get started?
+
+9. Explain the flow of HTTPS requests through the Spring Boot application.
+
+10. @Transactional annotation, what is it used for?
+
+11. Difference between @Controller and @RestController.
+
+12. RequestMapping vs PostMapping vs GetMapping
+
+13. Explain Profiles in Spring.
+
+14. Component Scanning.
+
+15. Qualifiers.
+
+16. Bean Scopes.
+
+17. Bean Lifecycle methods.
+
+18. General Spring Core.
+
+Design Aspect.
+0. Conflict resolution in a distributed system.
+
+1. How to handle distributed transactions.
+
+2. ⁠Idempotency.
+
+3. ⁠Idempotent APIs.
+
+4. ⁠How to scale an API from 0 to millions of users.
+
+5. ⁠producer-consumer problem.
+
+6. ⁠Pub-Sub pattern implementation.
+
+7. ⁠What happens when a database crashes midway into performing a transaction.
+
+8. ⁠Write Ahead Log, what is it used for?
+
+9. ⁠CAP theorem.
+
+10. ⁠Singleton Pattern, Factory Pattern, Chain of Responsibility, Strategy Pattern.
+
+11. ⁠When to use Kafka vs Rabbit MQ vs Amazon SQS queues.
+
+12. ⁠How to ensure idempotency in Kafka consumers.
+
+13. ⁠How do you ensure messages always go to a particular partition in Kafka?
+
+14. ⁠How are messages read and managed in a consumer group?
+
+15. ⁠Explain Event Sourcing(ES).
+
+16. ⁠If there’s a missing data in ES, since it’s immutable what do you do?
+
+17. ⁠Dual write problem.
+
+18. ⁠SQL vs NoSQL how do you decide?
+
+19. ⁠ACID transactions.
+
+20. ⁠Caching.
+
+21. ⁠Caching strategies.
+
+22. ⁠LRU vs LFU cache, when to use which?
+
+23. SOLID principle.
+
+24. Change Data Capture.
+
+etc…

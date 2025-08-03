@@ -1,0 +1,110 @@
+Liquidity Management Monitoring is typically overseen by a combination of the following key teams in a corporate or banking environment:
+
+✅ 1. Treasury Department (Primary Owner)
+Who: Corporate Treasury or Bank Treasury team
+
+Responsibility:
+
+	Monitoring daily cash positions
+	Managing short-term liquidity gaps
+	Investment of surplus cash
+	Handling funding requirements
+	Executing liquidity policies (e.g., minimum cash buffer, overdraft limits)
+
+✅ 2. Cash Management Operations Team
+Who: Operations team under the Finance or Treasury function
+
+Responsibility:
+
+	Performing cash sweeps / pooling
+	Reconciling bank statements
+	Ensuring payments are executed within available liquidity
+	Monitoring overdrafts and interest implications
+
+✅ 3. Risk Management Team
+Who: Enterprise Risk / Liquidity Risk Managers
+
+Responsibility:
+
+	Measuring liquidity risk indicators (LCR, NSFR in banks)
+	Setting thresholds and alerts
+	Stress testing liquidity scenarios
+	Regulatory reporting (especially for banks)
+
+✅ 4. Technology/IT Support Team
+Who: Application Support / Treasury Systems Admin
+
+Responsibility:
+
+	Maintaining Treasury Management Systems (e.g., Kyriba, SAP TRM)
+	Ensuring real-time bank APIs or MT940/942 integrations run as expected
+	Supporting dashboards, alerts, or BI tools used by Treasury
+
+🔁 How Liquidity Management Monitoring Runs (End-to-End Flow)
+Here’s a typical real-time or EOD (End-of-Day) cycle:
+
+🕗 1. Data Collection
+Bank statements fetched using MT940 (EOD) or MT942 (Intraday)
+
+API calls for real-time balances
+
+ERP updates AP/AR data
+
+Forecasted cash flow inputs (e.g., payroll, vendor payments)
+
+📊 2. Cash Position Calculation
+Cash available in all accounts globally
+
+Subtract committed outflows
+
+Add expected inflows
+
+Calculate Net Cash Position
+
+Example:
+
+Available: ₹12 Cr  
+Pending Payroll: ₹4 Cr  
+Vendor Payments: ₹3 Cr  
+Collections expected: ₹5 Cr  
+Net Cash: ₹12 + ₹5 - ₹7 = ₹10 Cr surplus
+
+
+🚨 3. Alerts & Exception Handling
+Shortfalls trigger alerts
+
+System may suggest internal fund movements or external borrowing
+
+🔄 4. Sweeping / Pooling
+Funds automatically moved to/from concentration account
+
+Notional or physical pooling done by bank as per agreement
+
+✅ 5. Final Actions
+Treasury decides to invest surplus (e.g., short-term deposits)
+
+Fund deficits via borrowing or overdrafts
+
+Confirm funding needs with front-office dealers
+
+🔐 Tools & Technologies Used
+TMS (Treasury Mgmt System): Kyriba, SAP TRM, Quantum, WallStreet Suite
+
+Bank Integration: SWIFT MT940/942, Host-to-Host, API
+
+Monitoring Dashboards: Power BI, Tableau, or internal web apps
+
+Alerting Systems: Email, SMS, or integrated TMS alerts
+
+✅ Summary: Who does what?
+| Role           | Responsibility                         |
+| -------------- | -------------------------------------- |
+| **Treasury**   | Lead, forecast, manage surplus/deficit |
+| **Cash Ops**   | Execute, reconcile, report             |
+| **Risk**       | Define limits, stress test, report     |
+| **IT/Support** | Run systems, integrations, alerts      |
+
+
+
+
+

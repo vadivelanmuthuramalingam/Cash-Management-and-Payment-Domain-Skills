@@ -1,0 +1,20 @@
+Understand the below scenario and provide the MT Messages
+
+1) Corporate client send a request to BANK A to transfer salary transaction to Bank B
+2) BANK A send the message to BANK B and BANK B credit the amount to bene and send the notifcation/statement
+3) BANK A generate the conver and send BANK C
+4) BANK C Generate the cover and Send BANK D
+ 5) BANK D generates the cover/credit Advise send to BANK B
+
+
+provide the message for below communication
+
+1) Client to BANK A communication
+2) BANK A to B communication
+3) BANK A to C communication
+4) BANK C to D communication
+5) BANK D to B communication
+6) BANK D to client communication
+
+
+

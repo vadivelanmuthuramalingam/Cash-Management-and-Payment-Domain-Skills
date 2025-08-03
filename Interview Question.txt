@@ -1,0 +1,197 @@
+**Self-Introduction (for Payment Domain Solution Architect Interview):**
+
+"Hello, my name is Vadivelan, and I have 18 years of experience in software engineering, with a strong focus over the past decade on architecting enterprise-grade applications in the financial and payment domains. I specialize in designing scalable, secure, and cloud-native microservice architectures using Spring Boot, Kubernetes, and event-driven patterns. My recent work includes leading the architecture of payment gateway platforms, collections systems, real-time fraud detection, and integrating with schemes like Visa, Mastercard, SWIFT, and UPI. I have deep knowledge of payment processing lifecycles (acquiring, issuing, clearing & settlement), payment standards (ISO 20022, SWIFT MT), as well as collections processes like Direct Debits, mandate management, sweeping/pooling, and netting. I also focus on observability, fault tolerance, and performance optimization to ensure resilience and regulatory compliance."
+
+---
+
+**Top 100 Interview Questions and Answers (Split Across Categories)**
+
+### A) Payment Domain – Functional Knowledge
+
+1. **Q: What are the key players in the payment ecosystem?**
+	In the Payment Ecosystem, there are several types of payment methods and systems that cater to different business models, regions, and transaction flows. Below is a categorized list of the major types of payment ecosystems, including Cards, CMO (Cash Management Operations), Digital, ACH, and more:
+	
+	🔹 1. Card-Based Payment Ecosystem
+			Used in both consumer and B2B transactions.	
+			| Type                | Description                                    | Examples                         |
+			| ------------------- | ---------------------------------------------- | -------------------------------- |
+			| **Credit Cards**    | Buy now, pay later. Issuer settles upfront.    | Visa, Mastercard, Amex           |
+			| **Debit Cards**     | Real-time deduction from bank account.         | Visa Debit, Maestro              |
+			| **Prepaid Cards**   | Pre-loaded with funds, limited to balance.     | Gift cards, Travel cards         |
+			| **Virtual Cards**   | Temporary card details for online use.         | Issued via fintech apps          |
+			| **Corporate Cards** | For employee/business spending, with controls. | Commercial Amex, Visa Commercial |
+			
+	🔹 2. Cash Management Operations (CMO)
+			Used by corporates for liquidity management, fund consolidation, and cash optimization.   
+			| Function                        | Description                                             |
+			| ------------------------------- | ------------------------------------------------------- |
+			| **Sweeping**                    | Automatic transfer of funds between accounts.           |
+			| **Pooling (Notional/Physical)** | Aggregation of balances to minimize interest costs.     |
+			| **Intercompany Netting**        | Offsetting payables/receivables between group entities. |
+			| **Treasury Payments**           | High-value, scheduled payments for funding or FX.       |
+			| **Liquidity Management**        | Optimize intra-day and overnight liquidity position.    |
+	🔹 3. Bank Transfer Systems
+		For local and cross-border fund movement.   
+			| Type                       | Description                                                  | Examples      |
+			| -------------------------- | ------------------------------------------------------------ | ------------- |
+			| **NEFT / RTGS / IMPS**     | India-specific domestic transfers.                           | NPCI          |
+			| **ACH / SEPA / BACS**      | Batch and real-time processing of local payments.            | US/Europe     |
+			| **Wire Transfers (SWIFT)** | Cross-border fund movement via correspondent banks.          | MT103         |
+			| **Faster Payments**        | Real-time payments system in UK.                             | FPS           |
+			| **UPI (India)**            | Instant fund transfer between bank accounts via mobile apps. | PhonePe, GPay |
+	🔹 4. Wallet-Based Payments
+		Digital payment interfaces that store funds or link to bank accounts/cards.
+			| Type                    | Description                             | Examples                      |
+			| ----------------------- | --------------------------------------- | ----------------------------- |
+			| **Closed Wallets**      | Use limited to the issuer’s platform.   | Amazon Pay (India), Ola Money |
+			| **Semi-Closed Wallets** | Usable across selected merchants.       | Paytm, PhonePe                |
+			| **Open Wallets**        | Allow cash withdrawals, fund transfers. | PayPal, Apple Pay, Google Pay |
+
+	🔹 5. QR and Token-Based Payments
+		Mobile-first, secure methods for physical and online transactions.
+			| Type             | Description                                   | Examples                      |
+			| ---------------- | --------------------------------------------- | ----------------------------- |
+			| **Static QR**    | Merchant-specific QR code, fixed to location. | BharatQR                      |
+			| **Dynamic QR**   | Amount-specific QR generated per transaction. | Paytm Dynamic QR              |
+			| **Tokenization** | Replaces card details with temporary tokens.  | Visa Token Service, Apple Pay |
+		
+
+2. **Q: Explain the difference between Acquirer and Issuer?**
+   A: Acquirer processes payment on behalf of the merchant; Issuer provides the card to the consumer.
+
+	✅ Difference Between Acquirer and Issuer (with Real-Time Use Case)
+| Aspect             | **Acquirer**                                                                              | **Issuer**                                                                                     |
+| ------------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| **Definition**     | A bank or financial institution that processes card payments on behalf of a **merchant**. | A bank or financial institution that **issues** payment cards (credit/debit) to **consumers**. |
+| **Customer**       | Merchant                                                                                  | Cardholder (consumer)                                                                          |
+| **Responsibility** | - Onboards merchants<br>- Authorizes card transactions<br>- Settles funds with merchants  | - Provides cards<br>- Authenticates cardholder<br>- Funds transactions                         |
+| **Revenue Source** | Merchant Discount Rate (MDR), interchange fees                                            | Interest, late fees, interchange revenue                                                       |
+| **Risk**           | Risk of chargebacks or fraud by merchant                                                  | Risk of customer default, fraud                                                                |
+| **System Role**    | Acquiring Bank in the payment flow                                                        | Issuing Bank in the payment flow                                                               |
+
+
+		🔄 Real-Time Use Case: Online Purchase Example
+			🎯 Scenario:
+			A customer buys a laptop worth ₹50,000 from an e-commerce site using a credit card.
+
+			▶️ Flow:
+				Cardholder enters card details on the e-commerce website.
+
+				Payment Gateway routes the request to the Acquirer (e.g., HDFC Bank – Acquirer for Amazon).
+
+				The Acquirer sends the authorization request to the Card Network (e.g., Visa/Mastercard).
+
+				Card Network forwards it to the Issuer (e.g., SBI – issuer of the customer's credit card).
+
+				Issuer checks available limit, fraud risk, OTP validation, etc., and responds:
+
+					✅ Approved: Transaction is authorized.
+
+					❌ Declined: Due to insufficient funds, fraud suspicion, etc.
+
+				Authorization flows back from Issuer → Network → Acquirer → Merchant.
+
+				The merchant completes the sale and ships the product.
+
+				Settlement occurs later (T+1 or T+2 days):
+
+					Acquirer credits merchant's account.
+
+					Issuer debits cardholder account and transfers funds to the acquirer via card network.
+
+
+3. **Q: What is a clearing and settlement process?**
+   A: Clearing is the reconciliation of transactions between parties; settlement is the actual transfer of funds.
+
+4. **Q: What is ISO 20022?**
+   A: A global financial messaging standard used for structured, rich data in payments, replacing SWIFT MT.
+
+5. **Q: Explain MT103 format?**
+   A: MT103 is a SWIFT message format used for cross-border wire transfer instructions.
+
+6. **Q: What is 3DS/3DS2?**
+   A: 3D Secure adds an authentication layer for card-not-present transactions to reduce fraud.
+
+7. **Q: What are PCI-DSS requirements?**
+   A: A set of standards ensuring secure card data handling – includes encryption, tokenization, logging, etc.
+
+8. **Q: What is a mandate in collections?**
+   A: A customer authorization allowing a business to pull money from their account (e.g., direct debit).
+
+9. **Q: What is sweeping in cash management?**
+   A: Automatic transfer of funds between accounts to optimize cash utilization.
+
+10. **Q: Difference between Pooling and Sweeping?**
+    A: Pooling is a notional balancing of account funds; sweeping is physical fund movement.
+
+... *(Add Q11–Q40 with domain-focused topics like RTP, UPI, NACH, ACH, FX Payments, Liquidity Management, Direct Debits, Collections Retry Strategies, Fraud Detection, Chargebacks, STP, Treasury Operations, etc.)*
+
+### B) Architecture & Design
+
+41. **Q: What is a microservice architecture?**
+    A: A design where functionalities are divided into loosely coupled services deployed independently.
+
+42. **Q: How do you manage communication between microservices?**
+    A: Using REST APIs, messaging systems like Kafka/Solace, and service mesh for resilience.
+
+43. **Q: What are SAGA patterns?**
+    A: A distributed transaction management technique for ensuring data consistency across services.
+
+44. **Q: How do you handle service discovery?**
+    A: Using tools like Eureka, Consul, or Kubernetes service registry.
+
+45. **Q: Explain Event-Driven Architecture.**
+    A: Services communicate through events rather than direct calls; improves decoupling and responsiveness.
+
+46. **Q: What is Domain-Driven Design?**
+    A: Designing software based on business domain models to align code with real-world concepts.
+
+47. **Q: What are the 12-Factor App principles?**
+    A: Best practices for building cloud-native apps — covering codebase, config, logs, concurrency, etc.
+
+48. **Q: Difference between Monolith and Microservices?**
+    A: Monolith is a single deployable unit; Microservices are modular and deployable independently.
+
+49. **Q: How do you achieve scalability in microservices?**
+    A: Through stateless services, container orchestration, autoscaling, and caching.
+
+50. **Q: How do you manage API Gateway & Security?**
+    A: Using gateways like Spring Cloud Gateway or Kong, JWT/OAuth2 for authentication, and API rate limiting.
+
+... *(Add Q51–Q75 covering topics like circuit breaker, caching strategies, CQRS, data replication, CAP theorem, logging, observability, security patterns, vaults, etc.)*
+
+### C) Spring Boot & Technology Stack
+
+76. **Q: How do you create a REST API in Spring Boot?**
+    A: Using `@RestController` and mapping endpoints using `@GetMapping`, `@PostMapping`, etc.
+
+77. **Q: What is Spring Cloud Config?**
+    A: A centralized configuration management system for microservices.
+
+78. **Q: What is Spring Actuator used for?**
+    A: To monitor and manage Spring Boot applications in production.
+
+79. **Q: How do you implement Retry in Spring?**
+    A: Using `@Retryable` and `@Recover` annotations from Spring Retry.
+
+80. **Q: What are profiles in Spring Boot?**
+    A: They enable environment-specific configurations (dev, test, prod).
+
+81. **Q: What is Spring Security and how do you secure APIs?**
+    A: It provides authentication and authorization via JWT, OAuth2, basic auth, etc.
+
+82. **Q: How does Spring Boot support Kafka?**
+    A: Through `spring-kafka` module and annotations like `@KafkaListener`.
+
+83. **Q: How do you achieve distributed tracing?**
+    A: Using Sleuth + Zipkin, or OpenTelemetry + Jaeger.
+
+84. **Q: How do you monitor application health?**
+    A: With Actuator endpoints, Prometheus, Grafana, and custom health indicators.
+
+85. **Q: What is the use of Feign Client in Spring Cloud?**
+    A: Declarative REST client to call other microservices with minimal boilerplate code.
+
+... *(Add Q86–Q100 with topics like Docker integration, Kubernetes deployment, Redis caching, exception handling, test automation, async processing, Spring Batch, JPA, HikariCP, etc.)*
+
+Let me know if you want these questions exported to a downloadable HTML, PDF, or Excel format.

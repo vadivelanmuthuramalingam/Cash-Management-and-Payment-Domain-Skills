@@ -1,0 +1,501 @@
+Tag	Field Name	Description
+:20:	Sender's Reference	Unique transaction reference
+:23B:	Bank Operation Code	E.g., "CRED" for Credit Transfer
+:32A:	Value Date / Currency / Amount	When, currency, and how much
+:50A/F/K:	Ordering Customer	Who is sending the money
+:52A:	Ordering Institution (optional)	The sender bank
+:53A/B:	Sender's Correspondent (optional)	Intermediary bank of sender
+:54A/B:	Receiver's Correspondent (optional)	Intermediary bank of receiver
+:56A:	Intermediary (optional)	Intermediary before final receiver
+:57A/D:	Account With Institution	Beneficiary's bank
+:59:	Beneficiary Customer	Who receives the money
+:70:	Remittance Information	Reason/purpose for payment
+:71A:	Details of Charges	E.g., SHA (shared), BEN, OUR
+:72:	Sender to Receiver Info (optional)	Extra instructions to the bank
+
+
+Block 1: Basic Header Block
+
+Block 2: Application Header Block
+
+Block 3: User Header Block
+
+Block 4: Text Block (actual message)
+
+Block 5: Trailer Block
+
+
+✅ Sample Message:
+
+{1:F01CITIGB2LAXXX0000000000}           // Block 1: Basic Header
+{2:I103DEUTDEFFXXXXN}                  // Block 2: Application Header
+{3:{113:ROMF}{108:MT103TESTREF123}}    // Block 3: User Header
+{4:                                    // Block 4: Text (Core Message)
+:20:TRX123456789
+:23B:CRED
+:32A:250711EUR10000,00
+:50K:/123456789
+John Smith
+123 Main Street
+London, UK
+:52A:CITIGB2LXXX
+:57A:DEUTDEFF
+:59:/987654321
+Anna Muller
+Hauptstrasse 45
+Berlin, Germany
+:70:Invoice 45678 – Consulting Services
+:71A:SHA
+:72:/INS/Instruction to credit immediately
+}                                     
+{5:{CHK:3A1B2C3D4E5F}{TNG:}}           // Block 5: Trailer
+
+
+✅ Block 1 Details
+======================================
+
+Structure: {1:<ApplicationID><ServiceID><LT Address><Session Number><Sequence Number>}
+Example: {1:F01CITIGB2LAXXX0000000000}
+
+| Component      | Value            | Description                                                                                                                                                     |
+| -------------- | -----------------| ------------------------------------------------------------------------------------------------------------------- |
+| `{1:`          | Start of Block 1 | Indicates Basic Header                                                                                                                                          |
+| `F`            | Application ID   | `F` = FIN (live SWIFT message); `A` = GPA (General Purpose App)                                                                                                 |
+| `01`           | Service ID       | `01` = Financial Messaging Service                                                                                                                              |
+| `CITIGB2LAXXX` | LT Address       | Logical Terminal (LT) of the **sender**  `CITI` = BIC code `GB` = Country (UK) `2L` = Location code `AXXX` = 																		Branch/terminal |
+| `0000`         | Session Number   | Used for message sequencing (may change per session)                                                                                                            |
+| `000000`       | Sequence Number  | Message sequence within session                                                                                                                                 |
+| `}`            | End of Block 1   | Closes the header                                                                                                                                               |
+
+✅ List of Possible Application IDs in SWIFT Block 1
+
+| **Application ID** | **Meaning**                           | **Usage**                                                                            |
+| ------------------ | ------------------------------------- | ------------------------------------------------------------------------------------ |
+| `F`                | **FIN (Financial Application)**       | Most common — used for live financial messaging (e.g., MT103, MT202)                 |
+| `A`                | **GPA (General Purpose Application)** | Used for SWIFT's general messaging or system messages (e.g., logins, key management) |
+| `L`                | **SNL (System Notification Log)**     | Internal system logs or notifications (used by SWIFT itself)                         |
+| `S`                | **SAP (System Application Process)**  | Used in specific SWIFTNet environments for system applications                       |
+| `X`                | **MX Messages in SWIFT FIN Format**   | Very rare — used for hybrid or test formats                                          |
+| `Z`                | **Reserved for future use or custom** | Not commonly seen in production                                                      |
+| `T`                | **Training/Test Environment**         | Used in **test or training messages** (often seen with `{2:T...}` in Block 2)        |
+
+
+
+📦 SWIFT Block 2 Syntax
+Block 2 appears like this:
+{2:I103DEUTDEFFXXXXN}
+
+{2:O1031200CITIGB2LAXXX22221234561200N}
+
+There are two types of Block 2, depending on message direction:
+| **Type**   | **Prefix** | **Meaning**                     |
+| ---------- | ---------- | ------------------------------- |
+| **Input**  | `I`        | Message being sent **to SWIFT** |
+| **Output** | `O`        | Message received **from SWIFT** |
+
+
+
+🧱 Block 2 — Input Message Format (Bank to Swift)
+Example:
+{2:I103DEUTDEFFXXXXN}
+
+| Component      | Value                                                              | Description        |
+| -------------- | ------------------------------------------------------------------ | ------------------ |
+| `{2:`          | Start of Block 2                                                   | Application Header |
+| `I`            | **I = Input** message                                              |                    |
+| `103`          | Message type (MT103)                                               |                    |
+| `DEUTDEFFXXXX` | Receiver BIC (Bank receiving message)                              |                    |
+| `N`            | Message priority:<br> `N` = Normal<br>`U` = Urgent<br>`S` = System |                    |
+| `}`            | End of block                                                       |                    |
+
+
+🧱 Block 2 — Output Message Format (Swift to Bank)
+Example: {2:O1031200CITIGB2LAXXX22221234561200N}
+
+| Component      | Value                  | Description        |
+| -------------- | ---------------------- | ------------------ |
+| `{2:`          | Start of Block 2       | Application Header |
+| `O`            | **O = Output** message |                    |
+| `103`          | Message Type (MT103)   |                    |
+| `1200`         | **Input time** (HHMM)  |                    |
+| `CITIGB2LAXXX` | **Sender BIC**         |                    |
+| `2222`         | **Session number**     |                    |
+| `123456`       | **Sequence number**    |                    |
+| `1200`         | **Output time** (HHMM) |                    |
+| `N`            | Priority (N = Normal)  |                    |
+| `}`            | End of block           |                    |
+
+
+
+📦 What is Block 3 in a SWIFT FIN Message?
+Block 3 is optional but widely used in production messages.
+
+It contains message-specific, application-specific, or user-defined headers.
+
+Each field in Block 3 is a tagged sub-block in the format:
+
+{tag:value}
+
+🧱 Typical Structure of Block 3
+Example: {3:{108:ABCREF123456}{113:ROMF}{119:STP}}
+
+Each field provides metadata or processing instructions to either SWIFT or the recipient bank.
+
+
+🔍 Commonly Used Tags in Block 3
+| **Tag** | **Name**                         | **Purpose**                                                                                  |
+| ------- | -------------------------------- | -------------------------------------------------------------------------------------------- |
+| `108`   | **MUR (Message User Reference)** | User-defined reference for tracking, reconciliation                                          |
+| `113`   | **Banking Priority Code**        | Indicates message origin or usage type (`ROMF`, `COV`, etc.)                                 |
+| `119`   | **Validation Flag**              | Used to enable STP (Straight Through Processing) or legacy validation (`STP`, `ISITC`, etc.) |
+| `111`   | **Service Type Identifier**      | Industry-specific processing needs (e.g., CLS, CREST)                                        |
+| `115`   | **Additional Routing Info**      | Used when multiple routing paths are needed                                                  |
+| `116`   | **Info to Receiver**             | Extra instructions or information                                                            |
+| `123`   | **Delivery Monitoring**          | Controls delivery behavior (`1`, `2`, `3` values)                                            |
+| `119C`  | **Compliance Code**              | Used to indicate compliance status in some flows                                             |
+
+
+📌 What is {108:} Message User Reference?
+A user-defined reference set by the sender of the SWIFT message.
+Used for internal tracking, reconciliation, and matching of transactions.
+Carried end-to-end through the SWIFT network (visible to the receiver).
+It must be unique for the institution within a given time frame (typically 90 days).
+
+✅ Format & Constraints
+| **Property**       | **Details**                                       |
+| ------------------ | ------------------------------------------------- |
+| Tag                | `{108:}`                                          |
+| Max Length         | **16 characters**                                 |
+| Allowed Characters | A–Z, a–z, 0–9, special characters (`/`, `-`, `.`) |
+| Required?          | **Optional** (but strongly recommended)           |
+| Position           | In **Block 3** of the message                     |
+
+
+
+✅ Complete List of Standard {113:} Banking Priority
+| **Code** | **Meaning**                                                                  |
+| -------- | ---------------------------------------------------------------------------- |
+| `COV`    | **Cover payment** message (e.g., MT202 COV)                                  |
+| `ROMF`   | **Remotely Originated Message Format** — typically from corporates via SCORE |
+| `URGP`   | **Urgent payment**                                                           |
+| `SPAY`   | **Single payment** — one-time use                                            |
+| `SSTD`   | **Standard priority payment**                                                |
+| `SDVA`   | **Same day value** — immediate processing required                           |
+| `INTC`   | **Intra-company transfer**                                                   |
+| `PHOB`   | **Phone booking** — pre-agreed or pre-booked deals over the phone            |
+| `PHOI`   | **Phone instruction** — payment requested via phone                          |
+| `TELE`   | **Telegraphic instruction**                                                  |
+| `URG`    | **Urgent** — usually used in older or proprietary flows                      |
+| `TREA`   | **Treasury payment**                                                         |
+| `TAXS`   | **Tax payment**                                                              |
+| `SALA`   | **Salary payment**                                                           |
+| `PENS`   | **Pension payment**                                                          |
+| `DIVI`   | **Dividend payment**                                                         |
+| `BONU`   | **Bonus payment**                                                            |
+| `CHAR`   | **Charity donation**                                                         |
+| `GOVT`   | **Government payment**                                                       |
+| `SUPP`   | **Supplier/vendor payment**                                                  |
+
+
+
+📦 MT103 – Block 4 Tag Reference
+
+| **Tag**     | **Field Name**                   | **Purpose**                                                   | **Accepted Values / Format**                                                                                    | **Usage Condition**                                            |
+| ----------- | -------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `:20:`      | Transaction Reference Number     | Unique reference for identifying the transaction              | Up to 16x (letters, digits)                                                                                     | **Mandatory**                                                  |
+| `:13C:`     | Time Indication (optional)       | Indicates time zone and time of message creation              | `/8c/[4!n]` (e.g., `/UTC/1400`)                                                                                 | Optional – rarely used                                         |
+| `:23B:`     | Bank Operation Code              | Defines the type of operation                                 | `CRED` (Customer Credit Transfer)                                                                               | **Mandatory**                                                  |
+| `:23E:`     | Instruction Code                 | Additional processing instructions                            | `SDVA`, `INTC`, `PHOB`, `PHOI`, `TELI`, `TELX`, `CHQB`, etc.                                                    | Optional – use when specific routing or handling required      |
+| `:26T:`     | Transaction Type Code (optional) | Specifies transaction type for regulatory/statistical reasons | 3-character code defined by local regulations (e.g., BIS)                                                       | Optional – often used in regulated markets                     |
+| `:32A:`     | Value Date / Currency / Amount   | Specifies execution date, currency, and amount of payment     | `YYMMDDCCYAmount` (e.g., `250711EUR10000,00`)                                                                   | **Mandatory**                                                  |
+| `:33B:`     | Currency / Instructed Amount     | Used if instructed amount is different from settlement amount | `CCYAmount`                                                                                                     | Optional – only used when there’s a currency conversion        |
+| `:36:`      | Exchange Rate                    | Exchange rate if applicable                                   | Numeric with optional decimal (e.g., `1,2345`)                                                                  | Optional – used with `:33B:`                                   |
+| `:50A:`     | Ordering Customer (BIC)          | Sender's bank if account is known via BIC                     | `/AccountNumber\nBIC`                                                                                           | **Mandatory** (choose one of `50A`, `50F`, or `50K`)           |
+| `:50F:`     | Ordering Customer (Structured)   | Structured format for customer info                           | Name, address, country in structured components                                                                 | Optional – use for structured compliance reporting             |
+| `:50K:`     | Ordering Customer (Unstructured) | Free text version of ordering customer                        | `/AccountNumber\nName\nAddress`                                                                                 | **Most commonly used by corporates**                           |
+| `:52A:`     | Ordering Institution             | Bank that initiated the payment                               | BIC (e.g., `DEUTDEFFXXX`)                                                                                       | Optional – used when the sender acts on behalf of another bank |
+| `:53A/B/D:` | Sender’s Correspondent           | Intermediary used by sender bank                              | `A` = BIC, `B` = Name and address, `D` = Free format                                                            | Optional                                                       |
+| `:54A/B/D:` | Receiver’s Correspondent         | Intermediary used by receiver bank                            | Similar to Tag 53                                                                                               | Optional                                                       |
+| `:55A/B/D:` | Third Reimbursement Institution  | Additional bank involved in payment chain                     | Similar format as 53/54                                                                                         | Optional – used for special reimbursement flows                |
+| `:56A/B/D:` | Intermediary Institution         | Further intermediary bank                                     | Similar to Tag 53                                                                                               | Optional – often used in nested correspondent banking          |
+| `:57A/B/D:` | Account with Institution         | Beneficiary’s bank                                            | BIC (A), Name & address (B), Free text (D)                                                                      | **Mandatory**                                                  |
+| `:59:`      | Beneficiary Customer             | Receiver of the funds                                         | `/AccountNumber\nName\nAddress`                                                                                 | **Mandatory**                                                  |
+| `:59A:`     | Beneficiary BIC                  | In rare cases, BIC instead of full name                       | `/AccountNumber\nBIC`                                                                                           | Optional – not standard in MT103                               |
+| `:70:`      | Remittance Information           | Reason/purpose of the payment                                 | Up to 4 lines, 35 characters each                                                                               | **Optional** – recommended for reconciliation                  |
+| `:71A:`     | Details of Charges               | Defines who pays transfer fees                                | `SHA` (Shared), `OUR` (Sender pays all), `BEN` (Beneficiary pays all)                                           | **Mandatory**                                                  |
+| `:71F:`     | Sender's Charges                 | Amount of charges paid by sender (if OUR is used)             | `CCYAmount`                                                                                                     | Optional – used only with `:71A:OUR`                           |
+| `:71G:`     | Receiver's Charges               | Amount of charges to be paid by receiver                      | `CCYAmount`                                                                                                     | Optional – used in some correspondent networks                 |
+| `:72:`      | Sender to Receiver Information   | Free text for extra instructions (non-automated)              | Up to 6 lines, 35 characters each. Used for instructions like `/INS/` (instructed bank), compliance notes, etc. | Optional – **not STP-friendly**                                |
+| `:77B:`     | Regulatory Reporting             | Regulatory/statistical reporting                              | Format defined by local central banks                                                                           | Optional – often mandatory in regulated jurisdictions          |
+
+
+✅ Accepted Values for :23B: in MT103
+| **Code** | **Meaning**                          | **When Used**                                                                |
+| -------- | ------------------------------------ | ---------------------------------------------------------------------------- |
+| `CRED`   | **Credit Transfer**                  | **Standard MT103 message** used to move funds to a beneficiary               |
+| `SPAY`   | **Single Payment Customer Transfer** | Used when processing **a single payment** on behalf of the customer          |
+| `SSTD`   | **Standing Order Payment**           | Used for **recurring payments** (e.g., payroll, subscriptions)               |
+| `SCLR`   | **Salary Payment**                   | Specifically for salary disbursement                                         |
+| `SDBK`   | **Bank to Bank Transfer**            | Used in some flows when transferring between internal accounts               |
+| `CHQB`   | **Cheque Payment**                   | Payment to be made by issuing a **cheque**                                   |
+| `INTC`   | **Intra-Company Transfer**           | Transfer between two accounts of the **same company** in different locations |
+| `TREA`   | **Treasury Payment**                 | Related to financial institution's **treasury operations**                   |
+| `LIMA`   | **Liquidity Management Transfer**    | For **funding or draining accounts** under liquidity management              |
+| `CORT`   | **Corporate Trade Payment**          | Payment made in settlement of a **trade transaction**                        |
+| `GOVT`   | **Government Payment**               | Payment initiated by a **government entity**                                 |
+| `DIVA`   | **Dividend Payment**                 | Payment of **dividends to shareholders**                                     |
+| `PENS`   | **Pension Payment**                  | Disbursement of **pension payments**                                         |
+| `BONU`   | **Bonus Payment**                    | Used for paying **bonuses**                                                  |
+| `CHAR`   | **Charity Donation**                 | Transfer to a **charitable organization**                                    |
+| `TAXS`   | **Tax Payment**                      | Used for tax payments to government or tax authorities                       |
+
+
+
+✅ Purpose of :26T: Transaction Type Code
+Specifies the economic purpose of the transaction.
+
+Helps central banks, regulators, and financial institutions classify payments for statistical, compliance, and monitoring purposes.
+
+| **Code** | **Meaning / Purpose**    | **Usage**                                       |
+| -------- | ------------------------ | ----------------------------------------------- |
+| `101`    | Customer credit transfer | Regular customer payment                        |
+| `103`    | Salary/wages             | Payroll disbursement                            |
+| `104`    | Pension                  | Pension disbursement                            |
+| `105`    | Social benefits          | Government-to-citizen welfare transfers         |
+| `106`    | Tax payment              | Tax remittance to authorities                   |
+| `107`    | Dividend payment         | Transfer of dividends to shareholders           |
+| `108`    | Intra-company payment    | Between accounts of same legal entity           |
+| `109`    | Bonus                    | Staff bonus payments                            |
+| `110`    | Reimbursement            | Expense or settlement refund                    |
+| `111`    | Treasury transfer        | Treasury or liquidity-related transfer          |
+| `112`    | Loan repayment           | Loan principal or interest payments             |
+| `113`    | Mortgage payment         | Monthly or final mortgage payments              |
+| `114`    | Supplier payment         | Payment to vendors or suppliers                 |
+| `115`    | Government transaction   | Central/local government flows                  |
+| `116`    | Insurance payout         | Insurance company to beneficiary                |
+| `117`    | Investment               | Fund transfer for investment purposes           |
+| `118`    | Education fees           | Tuition or school-related payments              |
+| `119`    | Utility payment          | Gas, electricity, water bills                   |
+| `120`    | Charity/donation         | Donation to NGOs or religious organizations     |
+| `121`    | Legal settlement         | Payment resulting from legal or court decisions |
+| `122`    | Gambling/winning payout  | Lottery or gambling prize                       |
+| `199`    | Other/Unclassified       | Used when no specific code matches              |
+
+
+
+✅ Format of :32A: Tag
+:32A:<YYMMDD><Currency><Amount>
+| Component  | Length | Description                             | Example                 |
+| ---------- | ------ | --------------------------------------- | ----------------------- |
+| `YYMMDD`   | 6      | Value Date (2-digit year)               | `250711` → 11 July 2025 |
+| `Currency` | 3      | ISO 4217 Currency Code (e.g., EUR, USD) | `EUR`                   |
+| `Amount`   | Var.   | Amount with comma `,` as decimal point  | `10000,00`              |
+
+
+✅ Format of :33B:: (Instructed Amount)
+:33B:<Currency><Amount>
+| Component | Length | Description                           |
+| --------- | ------ | ------------------------------------- |
+| Currency  | 3      | ISO 4217 code (e.g., USD, EUR, INR)   |
+| Amount    | Var.   | Amount using `,` as decimal separator |
+
+
+📌 When is :36: Used?
+| Scenario                              | `:36:` Required? | Why                         |
+| ------------------------------------- | ---------------- | --------------------------- |
+| Same currency in `:32A:` and `:33B:`  | ❌ No             | No FX conversion            |
+| Cross-currency, but FX is done later  | ❌ No             | Beneficiary bank handles FX |
+| Cross-currency, sender did conversion | ✅ Yes            | Exchange rate must be shown |
+
+
+✅ Format of :50
+
+In SWIFT MT103 messages, the :50 tag represents the Ordering Customer — the person or entity who initiates the payment.
+
+There are three formats for Tag :50: 50A, 50K, and 50F.
+
+🧾 Difference Between :50A, :50K, :50F
+| Tag    | Format           | Use Case / Data Format                                          | Typical Usage                                                          |
+| ------ | ---------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `:50A` | **BIC format**   | Uses BIC code only (SWIFT address)                              | When the **ordering party’s bank account** is identified by BIC        |
+| `:50K` | **Unstructured** | Free text: account number, name, and address                    | Most common in **corporate payments**                                  |
+| `:50F` | **Structured**   | Name and address split into structured subfields (`/Name1/...`) | Used when structured format is **required for compliance (e.g., AML)** |
+
+
+🔍 When to Use Which Format?
+
+| Scenario                              | Use `:50A:` | Use `:50K:` | Use `:50F:` |
+| ------------------------------------- | ----------- | ----------- | ----------- |
+| Sender is a **bank**                  | ✅           | ❌           | ❌           |
+| Sender is a **corporate or person**   | ❌           | ✅           | ✅           |
+| **KYC / Compliance** rules enforced   | ❌           | ❌           | ✅           |
+| Free-form name and address allowed    | ❌           | ✅           | ❌           |
+| Sender identified by **BIC only**     | ✅           | ❌           | ❌           |
+| **Structured AML screening required** | ❌           | ❌           | ✅           |
+
+
+
+
+
+
+
+
+
+
+
+
+
+🧾 Tag :57: — Account With Institution
+| Tag     | Meaning                      | Format Used                              | Use Case                                                                                              |
+| ------- | ---------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `:57A:` | **Structured** (BIC format)  | `/BIC`                                   | When the beneficiary bank has a **SWIFT BIC**                                                         |
+| `:57B:` | **Semi-structured**          | `/Account Number\nBank Name and Address` | When the bank **does not have a BIC**, but **you know the name & address**                            |
+| `:57D:` | **Unstructured** (free text) | Free-form text (up to 4 lines)           | When **you only have raw text** info — used when bank details are incomplete or local routing applies |
+
+
+
+
+
+💼 Understanding Tag :71A: — Details of Charges
+This field tells SWIFT and involved banks who will bear the transfer fees/charges.
+
+Valid values:
+| Code  | Meaning                                     | Who pays charges?                                                |
+| ----- | ------------------------------------------- | ---------------------------------------------------------------- |
+| `BEN` | **Beneficiary** pays all charges            | Sender pays nothing; receiver pays everything                    |
+| `OUR` | **Sender** pays all charges                 | Beneficiary receives full amount                                 |
+| `SHA` | Charges are **shared** between both parties | Sender pays sending bank fees; receiver pays receiving bank fees |
+✅ How :71A: Affects Amounts (Same Currency Case)
+| Field   | Description                              | BEN (All charges to beneficiary) | OUR (All charges to sender) |
+| ------- | ---------------------------------------- | -------------------------------- | --------------------------- |
+| `:33B:` | Instructed amount (sender’s intent)      | `USD 10,000.00`                  | `USD 10,000.00`             |
+| `:32A:` | Final settlement amount (to beneficiary) | `USD 9,950.00` (after fees)      | `USD 10,000.00`             |
+| `:71F:` | Charges deducted at sender's side        | Not present                      | e.g., `USD 50.00`           |
+| `:71G:` | Charges deducted at beneficiary’s side   | e.g., `USD 50.00`                | Not present                 |
+
+
+
+
+
+
+| **Field** | **Value**                    | **Explanation**                                          |
+| --------- | ---------------------------- | -------------------------------------------------------- |
+| `:20:`    | `TRX123456789`               | Unique transaction ID                                    |
+| `:23B:`   | `CRED`                       | Standard customer credit transfer                        |
+| `:32A:`   | `250711EUR10000,00`          | Value Date: 11 July 2025, Currency: EUR, Amount: €10,000 |
+| `:50K:`   | `/123456789\nJohn Smith...`  | Ordering customer with account number and address        |
+| `:52A:`   | `CITIGB2LXXX`                | Sender’s bank (Citibank London)                          |
+| `:57A:`   | `DEUTDEFF`                   | Beneficiary bank (Deutsche Bank Frankfurt)               |
+| `:59:`    | `/987654321\nAnna Muller...` | Beneficiary customer details                             |
+| `:70:`    | `Invoice 45678...`           | Payment purpose                                          |
+| `:71A:`   | `SHA`                        | Shared charges between sender and receiver               |
+| `:72:`    | `/INS/Instruction...`        | Extra instructions (e.g., urgent credit)                 |
+
+
+
+
+✅ How a beneficiary bank (bene bank) claims charges in an OUR transaction within the context of an MT103 SWIFT message.
+✅ 2. Send an MT191 or MT199 (Request for Payment of Charges)
+📨 The beneficiary bank sends a claim message (usually MT191 or MT199) back to the sender bank to claim the fee.
+
+Example:
+{1:F01DEUTDEFFAXXX0000000000}
+{2:I199CITIGB2LXXXXN}
+{4:
+:20:CHARGES-REF-001
+:21:MT103REF123456
+:79:Please reimburse USD 25.00 charges incurred on OUR basis
+}
+
+
+:20: → Reference of charge claim
+:21: → Related MT103 message reference
+:79: → Free text explanation for reimbursement
+
+
+✅ 3. Claim via Nostro Account Debit
+If there’s a Nostro/Vostro arrangement:
+The beneficiary bank debits the sender bank’s Nostro account directly for the charges
+This is governed by pre-agreed terms in bilateral agreements
+
+| Step | Who              | Action                                                 |
+| ---- | ---------------- | ------------------------------------------------------ |
+| 1    | Beneficiary bank | Credits full amount to customer                        |
+| 2    | Beneficiary bank | Sends MT191/MT199 to claim OUR charges                 |
+| 3    | Sender bank      | Pays charges via separate transfer or Nostro debit     |
+| 4    | Both             | Reconcile through internal treasury & settlement teams |
+
+
+
+
+If you (as the sender bank) receive an MT191 from the beneficiary bank claiming OUR charges for an MT103 payment, you need to settle the claimed amount to them — typically outside the original MT103.
+
+✅ Option 1: Send an MT103 for the Charges
+You initiate a separate MT103 to pay the charge amount back to the beneficiary bank.
+
+Example: MT103 to settle OUR charge
+{1:F01CITIGB2LAXXX0000000000}
+{2:I103DEUTDEFFXXXXN}
+{4:
+:20:OURCHARGEREF123
+:23B:CRED
+:32A:250712USD25,00
+:50K:/123456789
+Your Bank Name
+Your Bank Address
+:59:/987654321
+Beneficiary Bank Name
+Address
+:70:Reimbursement for OUR charges – MT103 REF: MT103REF123456
+:71A:OUR
+}
+
+
+✅ Option 2: Debit their Nostro Account (if pre-agreed)
+If the beneficiary bank maintains a Nostro account with you, you can credit their Nostro account internally.
+
+Example: Creadit the amount Bene Bank Nostro account and generate 910 or Mt199 to Bene Bank
+
+You notify them:
+Via MT910 (credit advice)
+
+Or MT199 as a free-format confirmation
+
+MT199 Example:
+:20:OURCHARGEREF123
+:21:MT103REF123456
+:79:USD 25.00 debited to your Nostro account as reimbursement for OUR charges
+
+
+✅ Option 3: Use MT202 for Bank-to-Bank Settlement
+Send an MT202 (Interbank Transfer) to route the charge reimbursement if both banks are connected via correspondent banking.
+
+
+
+✅ Difference B/w concepts of Ultimate Debtor, Ultimate Creditor, and Initiating Party 
+
+In ISO 20022 (especially in pacs and pain messages), the concepts of Ultimate Debtor, Ultimate Creditor, and Initiating Party help model complex payment chains with greater clarity than legacy MT messages (like MT103).
+
+These fields do not affect the actual payment routing, but they provide transparency in the payment lifecycle — especially in scenarios like intermediaries, treasury centers, and payment aggregators.
+
+✅ Example Scenario:
+A company "GlobalTech Holdings" initiates a payment via its treasury center "GlobalTech Treasury UK", on behalf of its Indian subsidiary "GlobalTech India Pvt Ltd", to pay an Indian freelancer "Anna Singh" via "PayAggregator India".
+
+| Role                    | Entity                   | ISO Field     |
+| ----------------------- | ------------------------ | ------------- |
+| Initiating Party        | GlobalTech Holdings (HQ) | `<InitgPty>`  |
+| Debtor                  | GlobalTech Treasury UK   | `<Dbtr>`      |
+| Ultimate Debtor         | GlobalTech India Pvt Ltd | `<UltmtDbtr>` |
+| Creditor (intermediate) | PayAggregator India      | `<Cdtr>`      |
+| Ultimate Creditor       | Anna Singh               | `<UltmtCdtr>` |
+
+
+✅ Key Differences
+| Aspect                 | Initiating Party      | Ultimate Debtor         | Ultimate Creditor        |
+| ---------------------- | --------------------- | ----------------------- | ------------------------ |
+| **Who triggers?**      | Initiates the message | Actually owes the money | Actually receives funds  |
+| **Regulatory impact?** | Low                   | Medium-High             | High (KYC/AML relevance) |
+| **Used for Routing?**  | No                    | No                      | No                       |
+| **Visibility for FI?** | Often required        | Strongly recommended    | Strongly recommended     |
+
+

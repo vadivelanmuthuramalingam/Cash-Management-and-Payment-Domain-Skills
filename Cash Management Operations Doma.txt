@@ -1,0 +1,605 @@
+### Cash Management Operations Domain – Interview Questions & Real-Time Answers
+
+✅ 1. Domain Understanding / Basics
+
+#### 1. What is cash management in corporate banking?
+
+**Answer:**
+Cash management refers to the process by which banks help corporate clients manage their cash inflows and outflows efficiently. It includes payments, collections, liquidity management, and financial reporting services.
+
+**Example:**
+A multinational company uses cash management services to track global receivables and make real-time payments to suppliers in various currencies.
+
+---
+
+#### 2. Difference between liquidity management and cash management?
+
+**Answer:**
+
+	* **Cash management** deals with daily operations like payments, collections, and reconciliations.
+	* **Liquidity management** is broader and focuses on ensuring the company has enough liquidity (cash or easily convertible assets) to meet obligations.
+
+**Example:**
+	A firm may use a short-term investment to earn interest but keep it accessible to meet payroll obligations.
+
+---
+
+#### 3. Key services under cash management by banks
+
+**Answer:**
+
+	* Collections and receivables
+	* Payments and disbursements
+	* Account services (sweeping, pooling)
+	* Liquidity & investment solutions
+	* Reporting (MT940, MT950)
+
+**Example:**
+	Banks offer electronic lockboxes to automate receivables for utility companies.
+
+---
+
+#### 4. What is a Nostro and Vostro account?
+
+**Answer:**
+
+	* **Nostro Account:** Your money in another bank ("ours" in "theirs")
+	* **Vostro Account:** Another bank's money in your bank ("theirs" in "ours")
+
+**Example:**
+	Indian Bank holding USD in JPMorgan Chase USA – Nostro. JPMorgan calls it a Vostro.
+
+---
+
+#### 5. Payables vs Receivables solutions
+
+**Answer:**
+
+	* **Payables:** Solutions like bulk payments, salary disbursements, vendor payments.
+	* **Receivables:** Collections via virtual accounts, e-invoicing, direct debits.
+
+**Example:**
+	A telecom company uses virtual accounts for each customer, enabling easy reconciliation.
+
+---
+
+#### 6. Sweeping and pooling mechanism
+
+**Answer:**
+
+	* **Sweeping:** Physically moves funds to a central account.
+	* **Pooling:** Consolidates balances notionally (no fund transfer).
+
+**Example:**
+	An MNC sweeps funds from subsidiaries to a central treasury account daily for better interest.
+
+---
+
+#### 7. Notional pooling vs physical cash pooling
+
+**Answer:**
+
+	* **Notional pooling:** Balances are aggregated for interest without actual transfers.
+	* **Physical pooling:** Transfers balances to/from a master account.
+
+**Example:**
+Group companies in EU use notional pooling to offset debit and credit balances and save interest.
+
+
+✅ Difference B/W Sweeping vs Physical Pooling – Complete Comparison
+
+| Feature               | **Sweeping**                                                 | **Physical Pooling**                                         |
+| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **Definition**        | Movement of funds from sub-accounts to a master account      | Centralization of actual funds into a single header account  |
+| **Cash Movement**     | Yes – periodic (e.g., daily, intraday)                       | Yes – continuous or at fixed intervals                       |
+| **Account Ownership** | Sub-accounts may belong to different legal entities          | Usually same legal owner or via intercompany loan agreements |
+| **Purpose**           | To maintain optimal balances in one or more accounts         | To consolidate cash centrally for investment or payments     |
+| **Direction**         | Uni-directional (sweep out) or bi-directional (sweep in/out) | Typically uni-directional, but may support fund return       |
+| **Types**             | Zero balance, target balance                                 | Header account structure; true fund pooling                  |
+| **Involved Parties**  | Multiple accounts at the same/different branches/countries   | Multiple accounts, but usually same group/treasury center    |
+| **FX Involvement**    | Optional – for cross-currency sweeping                       | Often involves FX if cross-border or multi-currency          |
+| **Frequency**         | Configurable (e.g., EOD, hourly)                             | Often EOD or based on pre-set windows                        |
+| **Bank Involvement**  | Bank initiates per rule/logic set by client                  | Bank processes actual fund consolidation                     |
+| **Interest Handling** | All cash sits in master account, earns interest there        | Pooled amount earns centralized interest                     |
+| **Reversibility**     | Reverse sweep is possible (on demand or rules-based)         | Replenishment requires new instruction                       |
+
+
+
+
+
+
+---
+
+#### 8. Intercompany netting
+
+**Answer:**
+	Process of consolidating payments between subsidiaries into one netted payment.
+
+**Example:**
+Company A owes B \$1M, and B owes A \$700K. After netting, A pays only \$300K.
+
+---
+
+#### 9. Concentration account
+
+**Answer:**
+A master account into which funds from various sub-accounts are swept.
+
+**Example:**
+A global retailer uses a concentration account to consolidate daily store cash deposits.
+
+---
+
+#### 10. Cash forecasting
+
+**Answer:**
+Estimating future cash flows to manage liquidity.
+
+**Example:**
+A CFO uses cash forecasting to plan for vendor payments and avoid shortfalls during quarter-end.
+
+
+✅ 2. Payments & Collections
+
+#### 11. MT101, MT103, MT940, MT950
+
+**Answer:**
+
+* **MT101:** Payment initiation request (multi-bank)
+* **MT103:** Customer transfer (SWIFT payment)
+* **MT940:** End-of-day statement
+* **MT950:** Reconciliation statement
+
+**Example:**
+Corporates use MT101 to initiate payments across their banks from a single ERP.
+
+---
+
+#### 12. MT101 vs MT103
+
+**Answer:**
+
+* **MT101** is a request to debit an account.
+* **MT103** is the actual payment instruction.
+
+**Example:**
+MT101 sent by treasury team to Bank A; Bank A issues MT103 to Bank B to credit beneficiary.
+
+---
+
+#### 13. Common payment methods in cash management
+
+**Answer:**
+
+* Wire transfers (SWIFT)
+* ACH (e.g., NEFT, SEPA)
+* RTGS
+* Cheques
+* Direct debits
+
+**Example:**
+A European company uses SEPA for payroll; uses SWIFT for US vendor payments.
+
+---
+
+#### 14. SEPA vs SWIFT
+
+**Answer:**
+
+* **SEPA**: Eurozone-specific low-cost payments.
+* **SWIFT**: Global standard for secure financial messaging.
+
+**Example:**
+A German firm pays a French vendor via SEPA, but a US vendor via SWIFT MT103.
+
+---
+
+#### 15. Direct debit process
+
+**Answer:**
+An arrangement where the creditor pulls funds from the debtor’s account with consent.
+
+**Example:**
+Utility companies collect monthly bills using direct debit mandates.
+
+
+#### 16. Payment life cycle
+
+**Answer:**
+
+1. Payment initiated
+2. Validated and authorized
+3. Sent to bank (e.g., MT101)
+4. Bank processes (e.g., MT103)
+5. Beneficiary gets credited
+
+**Example:**
+SAP ERP triggers MT101 → Bank validates → Issues MT103 → Credit beneficiary
+
+---
+
+#### 17. Payment failure reasons
+
+**Answer:**
+
+* Incorrect beneficiary details
+* Sanction hit
+* Insufficient funds
+* Cut-off missed
+
+**Example:**
+A payment fails because the beneficiary IBAN is invalid.
+
+---
+
+#### 18. STP benefits
+
+**Answer:**
+
+* Faster processing
+* Fewer errors
+* Lower costs
+
+**Example:**
+A fully STP-compliant payment is processed in seconds without manual intervention.
+
+---
+
+#### 19. R-transactions in SEPA
+
+**Answer:**
+Returned transactions in SEPA due to failure (e.g., refusal, cancellation, reject).
+
+**Example:**
+Direct debit fails due to insufficient balance → generates R-transaction.
+
+---
+
+#### 20. Cut-off times
+
+**Answer:**
+Time limits by which transactions must be submitted to process same day.
+
+**Example:**
+RTGS cut-off is 5:30 PM. A payment sent after is processed next day.
+
+---
+
+✅ 3. Liquidity and Reconciliation
+
+
+#### 21. Real-time liquidity monitoring
+
+**Answer:**
+Using dashboards to track available funds across accounts in real-time.
+
+**Example:**
+Banks provide APIs for clients to pull real-time balances to make just-in-time payments.
+
+---
+
+#### 22. Reconciliation methods
+
+**Answer:**
+
+* Auto-reconciliation using MT940, MT950
+* Manual reconciliation for exceptions
+
+**Example:**
+ERP auto-reconciles bank statements daily using MT940.
+
+---
+
+#### 23. End-of-day vs intraday balance
+
+**Answer:**
+
+* **Intraday:** Real-time snapshots
+* **End-of-day:** Final balance for the day
+
+**Example:**
+Treasury uses intraday to track urgent payments; accounting uses EOD for reports.
+
+---
+
+#### 24. Un-reconciled items
+
+**Answer:**
+Items that do not match between bank and internal books.
+
+**Example:**
+A returned cheque not updated in ERP causes mismatch.
+
+---
+
+#### 25. MT942 usage
+
+**Answer:**
+Provides intraday account movements for liquidity management.
+
+**Example:**
+CFO uses MT942 every hour to check inflows before releasing large payments.
+
+---
+
+
+✅ 4. Treasury & Risk Controls
+
+#### 26. Risks in cash operations
+
+**Answer:**
+
+* Operational risk
+* Fraud
+* FX risk
+* Settlement risk
+
+**Example:**
+Payment processed without proper authorization leads to fraud.
+
+---
+
+#### 27. FX risk in cross-border payments
+
+**Answer:**
+Risk due to fluctuating exchange rates.
+
+**Example:**
+USD invoice paid 5 days later in INR—rate fluctuations cause gain/loss.
+
+---
+
+#### 28. Fraud prevention controls
+
+**Answer:**
+
+* Dual approval
+* Payment limits
+* Role-based access
+
+**Example:**
+Only senior manager can authorize payments > \$100,000.
+
+---
+
+#### 29. Duplicate payments
+
+**Answer:**
+Can be prevented by invoice matching, reference checks.
+
+**Example:**
+System alerts if invoice number already exists.
+
+---
+
+#### 30. Operational risk mitigation
+
+**Answer:**
+
+* Process automation
+* Regular audits
+* DR setup
+
+**Example:**
+DR site ensures payments continue during system outage.
+
+---
+✅ 5. Regulatory & Compliance
+
+#### 31. AML in cash management
+
+**Answer:**
+Banks monitor transactions for suspicious activity.
+
+**Example:**
+High-value payments to high-risk countries are flagged.
+
+---
+
+#### 32. Sanctions screening
+
+**Answer:**
+Validates beneficiary names against global watchlists.
+
+**Example:**
+Payment to an Iranian company blocked due to OFAC match.
+
+---
+
+#### 33. FATCA impact
+
+**Answer:**
+Requires banks to report U.S. persons' foreign assets.
+
+**Example:**
+US client holding foreign accounts flagged and reported.
+
+---
+
+#### 34. Cross-border regulations
+
+**Answer:**
+
+* SWIFT compliance
+* Local tax laws
+* RBI/OFAC/ECB rules
+
+**Example:**
+India requires Form 15CA/CB for foreign remittance.
+
+---
+
+#### 35. GDPR/Data privacy in payments
+
+**Answer:**
+Protects customer data in payment messages.
+
+**Example:**
+Banks must mask or encrypt personal details in messages.
+
+---
+
+✅ 6. Systems, Tools, and Industry Standards
+
+
+#### 36. ISO 20022 importance
+
+**Answer:**
+New XML-based payment format enabling richer data.
+
+**Example:**
+MT103 replaced by pain.001 for more structured data.
+
+---
+
+#### 37. Treasury Management Systems
+
+**Answer:**
+Tools like Kyriba, SAP, Quantum help manage cash flow.
+
+**Example:**
+Kyriba used to visualize global bank balances and make payments.
+
+---
+
+#### 38. API-based payment integration
+
+**Answer:**
+Real-time payment initiation and tracking via REST APIs.
+
+**Example:**
+ERP sends payment via API to bank; gets instant status update.
+
+---
+
+#### 39. High availability setup
+
+**Answer:**
+Redundancy + DR + failover ensures uninterrupted ops.
+
+**Example:**
+Payment system auto-switches to backup during downtime.
+
+---
+
+#### 40. SWIFT GPI role
+
+**Answer:**
+Provides real-time tracking of international payments.
+
+**Example:**
+Client sees where the MT103 payment is in the chain, like DHL tracking.
+
+---
+✅ 7. Scenario-Based / Behavioral
+
+
+#### 41. Missing MT940 troubleshooting
+
+**Answer:**
+Check:
+
+* Bank file transmission
+* ERP interface
+* Account filters
+
+**Example:**
+Bank sent MT940 but ERP job failed—manual upload done.
+
+---
+
+#### 42. Liquidity across currencies/time zones
+
+**Answer:**
+Use sweeping + intraday APIs + centralized treasury.
+
+**Example:**
+APAC funds moved early to cover US payroll via time zone arbitrage.
+
+---
+
+#### 43. Payment failure before cut-off
+
+**Answer:**
+
+* Expedite retry
+* Use backup bank
+* Inform beneficiary
+
+**Example:**
+RTGS fails; switched to NEFT as a fallback before 7 PM.
+
+---
+
+#### 44. Prioritizing exceptions
+
+**Answer:**
+Based on value, urgency, impact.
+
+**Example:**
+Vendor payment > Internal reimbursement.
+
+---
+
+#### 45. Delayed reconciliation handling
+
+**Answer:**
+
+* Partial reconciliation
+* Manual intervention
+* Adjust EOD schedule
+
+**Example:**
+Partial data matched, pending items flagged for review next day.
+
+---
+
+✅ 8. Advanced Topics (For Senior Roles)
+
+#### 46. Global cash pooling solution
+
+**Answer:**
+Use notional pooling + intercompany netting + virtual accounts.
+
+**Example:**
+Subsidiaries maintain local accounts but report to central pool in HQ.
+
+---
+
+#### 47. Intercompany netting challenges
+
+**Answer:**
+FX risk, legal approvals, tax implications.
+
+**Example:**
+Brazil subsidiary can't net due to regulatory restrictions.
+
+---
+
+#### 48. In-house banking model
+
+**Answer:**
+Corporate acts as bank for its units to manage funds.
+
+**Example:**
+Treasury issues internal loans, sets rates, collects interest.
+
+---
+
+#### 49. AI/ML in operations
+
+**Answer:**
+Used for fraud detection, reconciliation, exception handling.
+
+**Example:**
+ML model flags unusual vendor payments based on historical pattern.
+
+---
+
+#### 50. Virtual accounts for receivables
+
+**Answer:**
+Assign unique account numbers per customer to auto-reconcile.
+
+**Example:**
+Customer ABC pays into VA1234; system maps to their invoice automatically.
