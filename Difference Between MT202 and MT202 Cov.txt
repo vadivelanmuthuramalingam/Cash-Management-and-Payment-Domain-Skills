@@ -1,0 +1,53 @@
+🔍 Difference Between MT202 and MT202 COV
+| Feature                     | **MT202**                                      | **MT202 COV** (Cover)                                     |
+| --------------------------- | ---------------------------------------------- | --------------------------------------------------------- |
+| **Purpose**                 | Bank-to-bank payment (no customer involved)    | Fund settlement **on behalf of MT103** (customer payment) |
+| **Contains Customer Info?** | ❌ **No** – purely interbank                    | ✅ **Yes** – must include originator & beneficiary         |
+| **Compliance Visibility**   | ❌ **Low** – no customer traceability           | ✅ **High** – includes `field 50`, `field 59` from MT103   |
+| **Usage Scenario**          | Treasury, liquidity management, FX settlements | Used **with MT103** in a **cover payment** model          |
+| **Linked To MT103?**        | ❌ Standalone                                   | ✅ Always linked to MT103 (references its data)            |
+| **Mandatory Fields**        | :20:, :32A:, :53A:, :57A:                      | Same as MT202 **plus mandatory `:50F/K` and `:59`**       |
+| **Introduced**              | Legacy SWIFT message                           | Introduced in **2009** by SWIFT (FinCEN-driven)           |
+
+
+
+
+💳 Why Was MT202 COV Introduced?
+Prior to 2009, banks used MT202 to move cover funds without including customer info, creating compliance risks:
+
+Authorities (like FinCEN) required visibility into originator and beneficiary
+
+SWIFT created MT202 COV to meet AML/CFT and sanctions compliance regulations
+
+🧾 Message Structure Comparison
+✅ MT202 (Interbank transfer)
+{1:F01CITIGB2LAXXX0000000000}
+{2:I202HSBCUS33XXXXN}
+{4:
+:20:TRX998877
+:32A:250711USD500000,00
+:53A:CITIGB2LXXX
+:57A:HSBCUS33XXX
+}
+
+
+✅ MT202 COV (Cover for MT103)
+{1:F01SCBLUS33AXXX0000000000}
+{2:I202SCBLINBBXXXXN}
+{3:{113:COV}{108:MT103REF789}}
+{4:
+:20:MT202COVREF001
+:21:MT103REF789
+:32A:250711USD10000,00
+:52A:SCBLUS33
+:53A:SCBLUS33
+:56A:SCBLINBB
+:57A:ICICINBB
+:58A:ICICINBB
+:50K:/123456789
+John Smith
+New York, USA
+:59:/987654321
+Raj Kumar
+Mumbai, India
+}
