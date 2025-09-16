@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ISO 20022 vs SWIFT MT Message Mapping</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .table { border-collapse: collapse; width: 100%; }
+        .table th, .table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        .table th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>ISO 20022 vs SWIFT MT Message Mapping</h1>
+    <table class="dataframe table table-striped">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Business Function</th>
+      <th>ISO 20022</th>
+      <th>SWIFT MT</th>
+      <th>Use Case / Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Customer Credit Transfer</td>
+      <td>pain.001.001.03</td>
+      <td>MT103</td>
+      <td>Corporate sends salary payment to employee via bank</td>
+    </tr>
+    <tr>
+      <td>Direct Debit Initiation</td>
+      <td>pain.008.001.02</td>
+      <td>MT104</td>
+      <td>Utility company initiates bill collection from customer</td>
+    </tr>
+    <tr>
+      <td>Payment Status Report</td>
+      <td>pain.002.001.03</td>
+      <td>MT199 / MT292</td>
+      <td>Bank confirms successful execution of corporate payment</td>
+    </tr>
+    <tr>
+      <td>FI Credit Transfer</td>
+      <td>pacs.008.001.02</td>
+      <td>MT103</td>
+      <td>Bank-to-bank credit transfer for customer transaction</td>
+    </tr>
+    <tr>
+      <td>Cover Payment</td>
+      <td>pacs.009.001.02</td>
+      <td>MT202 / MT202 COV</td>
+      <td>Sending funds to cover an MT103 sent via another route</td>
+    </tr>
+    <tr>
+      <td>Payment Return</td>
+      <td>pacs.004.001.02</td>
+      <td>MT192 / MT103 Return</td>
+      <td>Bank returns funds due to invalid beneficiary details</td>
+    </tr>
+    <tr>
+      <td>Payment Cancellation Request</td>
+      <td>camt.056.001.01</td>
+      <td>MT192 / MT292</td>
+      <td>Customer requests bank to cancel a previously sent payment</td>
+    </tr>
+    <tr>
+      <td>Interbank Statement</td>
+      <td>camt.053.001.02</td>
+      <td>MT940 / MT950</td>
+      <td>Bank provides end-of-day balance and transaction summary</td>
+    </tr>
+    <tr>
+      <td>Intraday Reporting</td>
+      <td>camt.052.001.02</td>
+      <td>MT941 / MT942</td>
+      <td>Bank sends hourly transaction updates to corporate</td>
+    </tr>
+    <tr>
+      <td>Debit/Credit Notification</td>
+      <td>camt.054.001.02</td>
+      <td>MT900 / MT910</td>
+      <td>Instant alert of account credit due to incoming funds</td>
+    </tr>
+    <tr>
+      <td>Account Balance Inquiry</td>
+      <td>camt.060.001.01</td>
+      <td>MT920</td>
+      <td>Customer requests account balance from bank</td>
+    </tr>
+    <tr>
+      <td>Balance Report</td>
+      <td>camt.061.001.01</td>
+      <td>MT941</td>
+      <td>Bank reports current balance across accounts</td>
+    </tr>
+    <tr>
+      <td>Exception Investigation</td>
+      <td>camt.026.001.03</td>
+      <td>MT196 / MT296</td>
+      <td>Investigating a returned or rejected payment</td>
+    </tr>
+    <tr>
+      <td>Payment Status Inquiry</td>
+      <td>camt.028.001.03</td>
+      <td>MT199 / MT299</td>
+      <td>Corporate asks bank for update on a delayed payment</td>
+    </tr>
+    <tr>
+      <td>Status Response</td>
+      <td>camt.029.001.03</td>
+      <td>MT199 / MT299</td>
+      <td>Bank replies to payment status inquiry</td>
+    </tr>
+    <tr>
+      <td>Statement for Direct Debit</td>
+      <td>camt.086.001.01</td>
+      <td>—</td>
+      <td>SEPA DD collection report shared with biller</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
