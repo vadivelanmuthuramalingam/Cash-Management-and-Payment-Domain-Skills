@@ -1,0 +1,62 @@
+1. MT1xx Series: Customer Payments and Cheques
+2. MT2xx Series: Financial Institution Transfers
+3. MT3xx Series: Foreign Exchange, Money Markets, and Derivatives
+6. MT9xx Series: Cash Management and Customer Reporting
+
+pacs.002 --> Payment status notification
+pacs.003 -->Direct Debit Request from Remiting bank and return pacs.002 for success/failure
+pacs.004 -> SCB Us send pacs  008 t0 bene but bene not able to credit to customer. then bene bank initiate pacs.004 to scb us to reverse the original transaction (Sent by Bank B after initially accepting a payment but later deciding to return the funds)
+
+pacs.005 -> used to send the cancellation request for Financial Instauation to Financial Institution
+pacs.007 - payment reversal request by debtor/sender bank Original payment had an error (wrong amount, duplicate, fraud)
+camt.056 - Cancellation Request
+
+incomming MT103 and waiting for cover(MT202 block 3 119:COV, MT910)
+
+
+SWIFT MT,ISO 20022,Message Type
+MT103,pacs.008,Single customer payment
+MT202,pacs.009,Bank-to-bank transfer
+MT202 COV,pacs.009 + pacs.008,Cover payment
+MT101,pain.001,Customer payment initiation
+	Used in treasury, payroll, vendor payments, intercompany transfers, etc
+	Sent from a corporate (or service bureau) to one or more banks.
+	Can carry one or multiple payment instructions.
+MT102,pacs.008,Multiple Customer Credit Transfers
+MT104,pacs.010,Direct debit
+MT191,camt.026, Request for Payment of Charges/ Interest/ and Other Expenses
+MT202 Cov , pacs.005,Request for Payment of Charges, Interest and Other Expenses
+MT192,pacs.007,Return/reversal/cancellation request
+MT199/MT299,camt.025 or structured proprietary,Free format
+MT900,camt.054,Debit advice
+MT910,camt.054,Credit advice
+MT940,camt.053,Account statement
+MT950,camt.053,Statement Message
+
+
+
+
+PAIN.009, 	, Used to initiate a SEPA direct debit mandate between debtor and creditor.
+PAIN.008, MT104 , Used by corporates to initiate direct debit instructions (e.g., for recurring payments, loan EMI).
+PAIN.010, 	, Used to modify the mandate terms for direct debit (e.g., amount, frequency).
+PAIN.011, 	, Used to cancel a SEPA direct debit mandate.
+pain.002, MT199 , Provides status on previously sent PAIN.001 – accepted, rejected, pending, etc.
+					IMPS Transaction Inquiry
+PAIN.007, MT192 , Used to request a reversal of a previously sent PAIN.001 (e.g., due to duplicate or erroneous payment). 
+
+
+
+✅ MT Messages Breakdown
+| **Step** | **Sender → Receiver**       | **MT Message Type**    | **Purpose**                                                      |
+| -------- | --------------------------- | ---------------------- | ---------------------------------------------------------------- |
+| 1️⃣      | **Corporate → Bank A**      | `MT101` or `pain.001`  | Payment initiation by corporate                                  |
+| 2️⃣      | **Bank A → Bank B**         | `MT103`                | **Instruction message** with remittance info (no funds transfer) |
+| 3️⃣      | **Bank A → Bank C**         | `MT202 COV`            | **Cover payment** for the MT103 sent to Bank B                   |
+| 4️⃣      | **Bank C → Bank D**         | `MT202`                | Interbank settlement (transfers funds to Bank D)                 |
+| 5️⃣      | **Bank D → Bank B**         | `MT210` or `MT103`     | **Advice of funds** to credit the beneficiary                    |
+| 6️⃣      | **Bank D or B → Corporate** | `MT910` or `MT940/950` | Notification / Credit Advice (funds received)                    |
+
+
+
+
+
